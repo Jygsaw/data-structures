@@ -11,28 +11,33 @@ HashTable.prototype.insert = function(k, v){
   // checking if bucket exists
   if(!targetBucket){
     // creating new bucket
-    targetBucket = {};
+    targetBucket = [];
     this._storage.set(i,targetBucket);
   }
 
   // setting key/val in bucket
-  targetBucket[k] = v;
-
+  targetBucket.push([k, v]);
 };
 
 HashTable.prototype.retrieve = function(k){
   // init vars
   var i = getIndexBelowMaxForKey(k, this._limit);
   var targetBucket = this._storage.get(i);
+  var result = null;
 
   // checking if key/val exists
-  if(targetBucket[k]){
+  if(targetBucket) {
     // return key/val
-    return targetBucket[k];
+    _.each(targetBucket, function(array){
+      if(array[0] === k){
+        console.log("this the value " + array[1]);
+        result = array[1];
+      }
+    });
   }
 
   // return null if nothing found
-  return null;
+  return result;
 };
 
 HashTable.prototype.remove = function(k){
@@ -42,8 +47,20 @@ HashTable.prototype.remove = function(k){
 
   // checking if target bucket exists
   if(targetBucket){
-    // delete key/val from bucket
-    delete targetBucket[k];
+    if (targetBucket.length === 1) {
+      targetBucket.pop();
+    } else {
+      // find index for target key/
+      var targetIndex;
+      _.each(targetBucket, function(array, index) {
+        if (array[0] === k) {
+          targetIndex = index;
+        }
+      });
+
+      // delete key/val from bucket
+      targetBucket = targetBucket.splice(targetIndex, 1);
+    }
   }
 };
 
