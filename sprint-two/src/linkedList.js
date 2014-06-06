@@ -3,23 +3,51 @@ var makeLinkedList = function(){
   list.head = null;
   list.tail = null;
 
+
+  list.addToHead = function(value) {
+    if (list.head === null) {
+      list.addToTail(value);
+    } else {
+      var newNode = makeNode(value);
+      newNode.next = list.head;
+      list.head.previous = newNode;
+      list.head = newNode;
+    }
+  };
+
   list.addToTail = function(value){
     var newNode = makeNode(value);
     if(list.tail === null){
       list.head = newNode;
     } else {
-      list.tail.setNext(newNode);
+      list.tail.next = newNode;
+      newNode.previous = list.tail;
     }
     list.tail = newNode;
   };
 
   list.removeHead = function(){
     if(list.head){
-      var result = list.head.getValue();
+      var result = list.head.value;
       if(list.head === list.tail){
+        list.head = null;
         list.tail = null;
+      }else{
+        list.head = list.head.next;
       }
-      list.head = list.head.getNext();
+      return result;
+    }
+  };
+
+  list.removeTail = function() {
+    if (list.tail) {
+      var result = list.tail.value;
+      if (list.tail === list.head) {
+        list.head = null;
+        list.tail = null;
+      }else{
+        list.tail = list.tail.previous;
+      }
       return result;
     }
   };
@@ -28,10 +56,10 @@ var makeLinkedList = function(){
     if(list.head){
       var tempNode = list.head;
       while(tempNode){
-        if(target === tempNode.getValue()){
+        if(target === tempNode.value) {
           return true;
         }
-        tempNode = tempNode.getNext();
+        tempNode = tempNode.next;
       }
     }
     return false;
@@ -42,22 +70,9 @@ var makeLinkedList = function(){
 
 var makeNode = function(value){
   var node = {};
-
   node.value = value;
   node.next = null;
-
-  node.getValue = function() {
-    return node.value;
-  };
-
-  node.getNext = function() {
-    return node.next;
-  };
-
-  node.setNext = function(nextNode) {
-    node.next = nextNode;
-  };
-
+  node.previous = null;
   return node;
 };
 
