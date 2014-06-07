@@ -30,7 +30,6 @@ HashTable.prototype.retrieve = function(k){
     // return key/val
     _.each(targetBucket, function(array){
       if(array[0] === k){
-        console.log("this the value " + array[1]);
         result = array[1];
       }
     });
@@ -59,7 +58,7 @@ HashTable.prototype.remove = function(k){
       });
 
       // delete key/val from bucket
-      targetBucket = targetBucket.splice(targetIndex, 1);
+      targetBucket.splice(targetIndex, 1);
     }
   }
 };
