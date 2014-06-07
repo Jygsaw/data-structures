@@ -53,6 +53,27 @@ bstMethods.depthFirstLog = function(callback){
     this.right.depthFirstLog(callback);
   }
 };
+
+bstMethods.breadthFirstLog = function(callback) {
+  var queue = [this];
+
+  while(queue.length > 0) {
+    // init vars
+    var targetNode = queue.shift();
+
+    // invoke callback on current node
+    callback(targetNode.value);
+
+    // push children onto queue if available
+    if (targetNode.left) {
+      queue.push(targetNode.left);
+    }
+    if (targetNode.right) {
+      queue.push(targetNode.right);
+    }
+  }
+};
+
 /*
  * Complexity: What is the time complexity of the above functions?
  */
