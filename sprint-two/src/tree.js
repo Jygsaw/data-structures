@@ -59,6 +59,14 @@ treeMethods.removeChild = function(child){
     this.children.splice(targetIndex,1);
   }
 };
+
+treeMethods.traverse = function(callback){
+  callback(this.value);
+  _.each(this.children, function(node){
+    node.traverse(callback);
+  });
+};
+
 /*
  * Complexity: What is the time complexity of the above functions?
  */
