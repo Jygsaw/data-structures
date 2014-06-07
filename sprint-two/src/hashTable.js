@@ -22,19 +22,7 @@ HashTable.prototype.insert = function(k, v){
 
   // increase hash table limit if necessary
   if(this._usage > this._limit * 0.75) {
-    // building new data store
-    var oldStorage = this._storage;
-    this._usage = 0;
-    this._limit *= 2;
-    this._storage = makeLimitedArray(this._limit);
-
-    // inserting old key/val pairs into new data store
-    var that = this;
-    oldStorage.each(function(item){
-      _.each(item, function(element){
-        that.insert(element[0],element[1]);
-      });
-    });
+    this.migrate(this._limit * 2);
   }
 };
 
@@ -84,21 +72,25 @@ HashTable.prototype.remove = function(k){
 
     // decrease hash table limit when possible
     if(this._usage < this._limit * 0.25) {
-      // building new data store
-      var oldStorage = this._storage;
-      this._usage = 0;
-      this._limit /= 2;
-      this._storage = makeLimitedArray(this._limit);
-
-      // inserting old key/val pairs into new data store
-      var that = this;
-      oldStorage.each(function(item){
-        _.each(item, function(element){
-          that.insert(element[0],element[1]);
-        });
-      });
+      this.migrate(this._limit / 2);
     }
   }
+};
+
+HashTable.prototype.migrate = function(newLimit) {
+  // building new data store
+  var oldStorage = this._storage;
+  this._usage = 0;
+  this._limit = newLimit;
+  this._storage = makeLimitedArray(this._limit);
+
+  // inserting old key/val pairs into new data store
+  var that = this;
+  oldStorage.each(function(item){
+    _.each(item, function(element){
+      that.insert(element[0],element[1]);
+    });
+  });
 };
 
 /*
