@@ -2,6 +2,7 @@ var makeTree = function(value){
   var newTree = {};
   newTree.value = value;
   newTree.children = undefined;
+  newTree.parent =  null;
   _.extend(newTree, treeMethods);
   return newTree;
 };
@@ -16,7 +17,9 @@ treeMethods.addChild = function(value){
   }
 
   // add new child to children array
-  this.children.push(makeTree(value));
+  var newChild = makeTree(value);
+  newChild.parent = this;
+  this.children.push(newChild);
 };
 
 treeMethods.contains = function(target){
@@ -38,7 +41,24 @@ treeMethods.contains = function(target){
   return false;
 };
 
+treeMethods.removeFromParent = function(){
+  var childToDelete = this;
+  this.parent.removeChild(this);
+  childToDelete.parent = null;
+};
 
+treeMethods.removeChild = function(child){
+  var targetIndex;
+  _.each(this.children, function(item, index){
+    if(item === child){
+      targetIndex = index;
+    }
+  });
+
+  if(targetIndex >= 0){
+    this.children.splice(targetIndex,1);
+  }
+};
 /*
  * Complexity: What is the time complexity of the above functions?
  */
